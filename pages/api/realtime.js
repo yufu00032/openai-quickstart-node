@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi } from 'openai';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -9,30 +9,42 @@ export default async function (req, res) {
   if (!configuration.apiKey) {
     res.status(500).json({
       error: {
-        message: "OpenAI API key not configured, please follow instructions in README.md",
-      }
+        message: 'OpenAI API key not configured, please follow instructions in README.md',
+      },
     });
     return;
   }
 
-  const animal = req.body.animal || '';
-  if (animal.trim().length === 0) {
+  const value = req.body.value || '';
+
+  if (value.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please enter a valid animal",
-      }
+        message: 'Please enter a valid value',
+      },
     });
     return;
   }
 
   try {
     const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: generatePrompt(animal),
-      temperature: 0.6,
+      model: 'gpt-3.5-turbo',
+      // prompt: generatePrompt(value),
+      temperature: 0.5,
+      message: [
+        {
+          role: 'system',
+          content:
+            '你是一個專業的旅遊顧問，專門負責奢華旅遊的飯店推薦，目前為私享旅遊工作，負責解答顧客的疑問、飯店推薦資訊，根據詢問的語系回覆對應語系',
+        },
+        {
+          role: 'user',
+          content: value,
+        },
+      ],
     });
     res.status(200).json({ result: completion.data.choices[0].text });
-  } catch(error) {
+  } catch (error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
       console.error(error.response.status, error.response.data);
@@ -42,21 +54,20 @@ export default async function (req, res) {
       res.status(500).json({
         error: {
           message: 'An error occurred during your request.',
-        }
+        },
       });
     }
   }
 }
 
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Suggest three names for an animal that is a superhero.
+function generatePrompt(value) {
+  const capitalizedvalue = value[0].toUpperCase() + value.slice(1).toLowerCase();
+  return `Suggest three names for an value that is a superhero.
 
-Animal: Cat
+value: Cat
 Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-Animal: Dog
+value: Dog
 Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-Animal: ${capitalizedAnimal}
+value: ${capitalizedvalue}
 Names:`;
 }

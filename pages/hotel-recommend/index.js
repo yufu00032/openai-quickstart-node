@@ -1,37 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import API from './api';
+import API from '../api';
 import { Input, Button } from 'antd';
-import { color } from '../public/color';
+import { color } from '../../public/color';
 import { LoadingOutlined } from '@ant-design/icons';
-import { ChatAvatar, ChatText } from '../components/chat';
+import { ChatAvatar, ChatText } from '../../components/chat';
 
-export default function App() {
+export default function HotelRecommend() {
   const [value, setValue] = useState('');
   const [result, setResult] = useState([]);
-  // const [result, setResult] = useState([
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  //   { type: 'You', text: '1234567890' },
-  //   { type: 'ChatGPT', text: 'hello world' },
-  // ]);
   const [loading, setLoading] = useState(false);
   const chatRef = useRef(undefined);
 
   useEffect(() => {
-    chatRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [loading]);
+    chatRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [result]);
 
   const handleSend = async () => {
     const currentData = [...result, { type: 'You', text: value }];
@@ -40,17 +22,28 @@ export default function App() {
     setValue('');
 
     try {
-      const { data } = await API.sendFaq({ value });
-      const newData = data.result?.questions
-        ? { type: 'ChatGPT', text: `${data.result.questions}<br />${data.result.answers}` }
-        : { type: 'ChatGPT', text: data.result };
+      const { data } = await API.sendHotelRecommend({ value });
+      let response = '';
+
+      if (data.result[0]?.hotel) {
+        data.result.forEach((item, i) => {
+          if (i !== data.result.length - 1) {
+            response += `${item.hotel}<br />${item.description}<br /><br />`;
+          } else {
+            response += `${item.hotel}<br />${item.description}`;
+          }
+        });
+      } else {
+        response = data.result;
+      }
+      const newData = { type: 'ChatGPT', text: response };
       console.log(newData);
 
       setResult([...currentData, newData]);
       setLoading(false);
     } catch (error) {
       console.error(error);
-      if (error.response.status === 503) {
+      if (error.response?.status === 503) {
         const newData = { type: 'ChatGPT', text: '很抱歉，現在太忙了，請稍候再次呼叫我', error: 503 };
         setResult([...currentData, newData]);
         setLoading(false);

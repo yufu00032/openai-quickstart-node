@@ -1,7 +1,6 @@
 import { RobotOutlined, AppstoreOutlined } from '@ant-design/icons';
-import { Menu, Sider } from 'antd';
+import { Menu } from 'antd';
 import Link from 'next/link';
-import { color } from '../public/color';
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -15,29 +14,24 @@ function getItem(label, key, icon, children, type) {
 
 const items = [
   getItem(
-    <Link className="text hover" href="/">
-      客服機器人
+    <Link className="h3 hover" href="/">
+      FAQ
     </Link>,
-    'robot',
-    <RobotOutlined />
+    'faq',
+    <RobotOutlined className="h3" />
   ),
   getItem(
-    <Link className="text" href="/real-time">
-      即時文案
+    <Link className="h3 hover" href="/hotel-recommend">
+      酒店推薦
     </Link>,
-    'time',
-    <AppstoreOutlined />
+    'hotelrecommend',
+    <AppstoreOutlined className="h3" />
   ),
 ];
 
 const Nav = () => {
-  const onClick = (e) => {
-    console.log('click ', e);
-  };
-
   return (
     <Menu
-      onClick={onClick}
       className="section min-h-nav"
       style={{
         width: 256,

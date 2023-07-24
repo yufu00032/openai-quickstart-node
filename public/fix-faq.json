@@ -1,0 +1,10 @@
+[
+  { "role": "user", "content": "為什麼在這裡訂房後，我到酒店的會員沒看到" },
+  { "role": "assistant", "content": "35" },
+  { "role": "user", "content": "預定之後可以更改名稱嗎" },
+  { "role": "assistant", "content": "147" },
+  { "role": "user", "content": "用什麼幣別付款" },
+  { "role": "assistant", "content": "159" },
+  { "role": "user", "content": "結帳時使用什麼貨幣" },
+  { "role": "assistant", "content": "159" }
+]

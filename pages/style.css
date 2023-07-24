@@ -1,9 +1,3 @@
-:root {
-  --bg: '#ededed';
-  --section: '#f9f9f9';
-  --text: '#828282';
-}
-
 html,
 body,
 div,
@@ -132,6 +126,7 @@ table {
   border-spacing: 0;
 }
 
+/* The above is to remove browser CSS formatting */
 .flex {
   display: flex;
 }
@@ -158,6 +153,10 @@ table {
   color: #828282;
 }
 
+.logo {
+  background: #121416;
+}
+
 .section {
   background: #f9f9f9;
   color: #828282;
@@ -171,6 +170,38 @@ table {
   padding: 2em;
 }
 
+.pd-l-1 {
+  padding-left: 1em;
+}
+
+.pd-r-1 {
+  padding-right: 1em;
+}
+
+.pd-t-1 {
+  padding-top: 1em;
+}
+
+.pd-b-1 {
+  padding-bottom: 1em;
+}
+
+.mg-l-1 {
+  margin-left: 1em;
+}
+
+.mg-r-1 {
+  margin-right: 1em;
+}
+
+.mg-t-1 {
+  margin-top: 1em;
+}
+
+.mg-t-2 {
+  margin-bottom: 1em;
+}
+
 .h1 {
   font-size: 3rem;
 }
@@ -180,7 +211,7 @@ table {
 }
 
 .h3 {
-  font-size: 1.5rem;
+  font-size: 1.5rem !important;
 }
 
 .h4 {
@@ -196,12 +227,9 @@ table {
 }
 
 .chat-container {
-  height: calc(100vh - (2em * 2 * 2) - 52px);
+  height: calc(100vh - (2em * 2 * 2) - 52px - 2em);
+  margin-bottom: 2em;
   overflow: auto;
-}
-
-.text {
-  font-size: 1.5rem;
 }
 
 .light {
@@ -226,25 +254,14 @@ table {
   font-weight: 900;
 }
 
-.test {
-  background-image: linear-gradient(#f00000, #ff0000);
+.bad-res {
+  background: #ffa39e;
 }
+
 .user-input {
   background: #bae0ff;
 }
 
 .send {
   height: 3em;
-}
-
-.ant-modal-content {
-  background: #ededed !important;
-}
-
-.ant-modal-header {
-  background: #ededed !important;
-}
-
-.ant-modal-title {
-  color: #828282 !important;
 }

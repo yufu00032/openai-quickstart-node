@@ -12,3 +12,18 @@ export const ChatText = ({ text }) => (
     <div className="h4" dangerouslySetInnerHTML={{ __html: text }} />
   </div>
 );
+
+export const ChatLoading = ({ loading }) => (
+  <div
+    className="pd-1"
+    style={{
+      display: loading ? 'flex' : 'none',
+    }}
+  >
+    <ChatAvatar type="ChatGPT"></ChatAvatar>
+    <div className="f-dir-c">
+      <span className="h4 mg-r-1">努力思考中，請稍候</span>
+      <LoadingOutlined size="large" />
+    </div>
+  </div>
+);

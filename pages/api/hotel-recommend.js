@@ -9,7 +9,7 @@ const openai = new OpenAIApi(configuration);
 
 export default async function (req, res) {
   const value = req.body.value || '';
-  const noHotel = '很抱歉，您諮詢的酒店不在本系統查詢的範圍內，建議您查看酒店介紹頁來了解詳細的資訊';
+  const NOHOTEL = '很抱歉，您諮詢的酒店不在本系統查詢的範圍內，建議您查看酒店介紹頁來了解詳細的資訊';
   let trainHotel = [];
 
   if (!configuration.apiKey) {
@@ -49,9 +49,6 @@ export default async function (req, res) {
       ],
     });
     let area = getGPTContent(areaCompletion);
-    console.log('area\n');
-    console.log(area);
-    console.log('\narea\n');
 
     try {
       area = JSON.parse(area);
@@ -61,13 +58,12 @@ export default async function (req, res) {
 
     if (area === 'not found') {
       res.status(200).json({
-        result: '很抱歉，您諮詢的酒店不在本系統查詢的範圍內，建議您查看酒店介紹頁來了解詳細的資訊',
+        result: NOHOTEL,
       });
       return;
     }
 
     const findHotel = HOTEL.filter((item) => item.country === area.country || item.city === area.city);
-    console.log(findHotel);
 
     findHotel.forEach((item) => {
       trainHotel.push({
@@ -101,10 +97,9 @@ export default async function (req, res) {
     let hotelId = getGPTContent(hotelCompletion);
     hotelId = hotelId.split(' ').map((item) => parseInt(item));
     const hotelResponse = HOTEL.filter((item) => hotelId.find((id) => item.id === id));
-    console.log(hotelId);
 
     res.status(200).json({
-      result: hotelResponse.length > 0 ? hotelResponse : noHotel,
+      result: hotelResponse.length > 0 ? hotelResponse : NOHOTEL,
     });
   } catch (error) {
     // Consider adjusting the error handling logic for your use case

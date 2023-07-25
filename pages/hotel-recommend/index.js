@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import API from '../api';
 import { Input, Button } from 'antd';
 import { color } from '../../public/color';
-import { LoadingOutlined } from '@ant-design/icons';
-import { ChatAvatar, ChatText } from '../../components/chat';
+import { ChatAvatar, ChatText, ChatLoading } from '../../components/chat';
 
 export default function HotelRecommend() {
   const [value, setValue] = useState('');
@@ -36,9 +35,8 @@ export default function HotelRecommend() {
       } else {
         response = data.result;
       }
-      const newData = { type: 'ChatGPT', text: response };
-      console.log(newData);
 
+      const newData = { type: 'ChatGPT', text: response };
       setResult([...currentData, newData]);
       setLoading(false);
     } catch (error) {
@@ -73,28 +71,12 @@ export default function HotelRecommend() {
             </div>
           );
         })}
-        <div
-          className="pd-1"
-          style={{
-            display: loading ? 'flex' : 'none',
-          }}
-        >
-          <ChatAvatar type="ChatGPT"></ChatAvatar>
-          <div className="f-dir-c">
-            <span className="h4 mg-r-1">努力思考中，請稍候</span>
-            <LoadingOutlined size="large" />
-          </div>
-        </div>
+        <ChatLoading loading={loading}></ChatLoading>
         <div ref={chatRef}></div>
       </main>
       <div className="w-100 f-dir-c">
         <div className="flex ali-c">
-          <Input
-            className="h4 section send"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            style={{ marginRight: '1em' }}
-          />
+          <Input className="h4 section send mg-r-1" value={value} onChange={(e) => setValue(e.target.value)} />
           <Button type="primary" className="h4 send green" onClick={handleSend} disabled={loading}>
             Send
           </Button>

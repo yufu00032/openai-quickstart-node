@@ -10,7 +10,7 @@ const openai = new OpenAIApi(configuration);
 
 export default async function (req, res) {
   const value = req.body.value || '';
-  const noAnswer =
+  const NOANSWER =
     '很抱歉，您詢問的問題不在本系統的回答範圍內，建議您提供更詳細的說明，或是參考 FAQ 網頁與諮詢私享旅遊專線';
   const questions = FAQ.map((item) => ({ id: item.id, questions: item.questions }));
 
@@ -55,16 +55,15 @@ export default async function (req, res) {
     });
 
     let question = getGPTContent(questionCompletion);
-    console.log(question);
     question = question.match(/\d+(\.\d+)?/g)[0];
 
     if (question && question !== -1) {
       res.status(200).json({
-        result: FAQ.find((item) => item.id === parseInt(question)) || noAnswer,
+        result: FAQ.find((item) => item.id === parseInt(question)) || NOANSWER,
       });
     } else {
       res.status(200).json({
-        result: noAnswer,
+        result: NOANSWER,
       });
     }
   } catch (error) {

@@ -12,7 +12,7 @@ export default async function (req, res) {
   const value = req.body.value || '';
   const noAnswer =
     '很抱歉，您詢問的問題不在本系統的回答範圍內，建議您提供更詳細的說明，或是參考 FAQ 網頁與諮詢私享旅遊專線';
-  let questions = [];
+  const questions = FAQ.map((item) => ({ id: item.id, questions: item.questions }));
 
   if (!configuration.apiKey) {
     res.status(500).json({
@@ -32,10 +32,6 @@ export default async function (req, res) {
     return;
   }
 
-  FAQ.forEach((item, i) => {
-    questions.push({ role: 'user', content: JSON.stringify({ id: item.id, questions: item.questions }) });
-  });
-
   try {
     const questionCompletion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
@@ -43,27 +39,26 @@ export default async function (req, res) {
       messages: [
         {
           role: 'user',
-          content: '我會提供一連串的問題，你需要將其記住，直到我說"以上是全部的問題"時停止',
-        },
-        ...questions,
-        {
-          role: 'user',
           content:
-            '以上是全部的問題，接下來從我提供的問題，找出記住的問題中最接近的問題，回覆找到的問題的 id，除此之外不要回覆額外的文字或標點符號',
+            '# 提示\n你現在被用於奢華旅遊網站上的客服系統，' +
+            '目的是從已經定義好的問題 json 中找出與使用者詢問的問題最接近的問題，並回傳找到的 id\n' +
+            '# 限制\n必須回覆找到的 id\n不回覆非 id 的文字與符號\n如果沒有找到問題，回覆的 id 為 -1' +
+            `# 輸入文字\n${JSON.stringify(questions)}` +
+            '# 輸出文字\n1\n2\n3...以此類推，只回覆 id' +
+            `# 修正\n${JSON.stringify(FIXFAQ)}`,
         },
-        ...FIXFAQ,
         {
           role: 'user',
           content: value,
         },
       ],
-      stop: ['\n'],
     });
 
     let question = getGPTContent(questionCompletion);
+    console.log(question);
     question = question.match(/\d+(\.\d+)?/g)[0];
 
-    if (question) {
+    if (question && question !== -1) {
       res.status(200).json({
         result: FAQ.find((item) => item.id === parseInt(question)) || noAnswer,
       });

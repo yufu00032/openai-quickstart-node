@@ -6,5 +6,7 @@
   { "role": "user", "content": "用什麼幣別付款" },
   { "role": "assistant", "content": "159" },
   { "role": "user", "content": "結帳時使用什麼貨幣" },
-  { "role": "assistant", "content": "159" }
+  { "role": "assistant", "content": "159" },
+  { "role": "user", "content": "如果是自己跟酒店訂，還能有優惠嗎" },
+  { "role": "assistant", "content": "197" }
 ]

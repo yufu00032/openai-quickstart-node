@@ -144,6 +144,10 @@ table {
   justify-content: center;
 }
 
+.jus-sb {
+  justify-content: space-between;
+}
+
 .ali-c {
   align-items: center;
 }

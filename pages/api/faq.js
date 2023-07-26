@@ -42,10 +42,10 @@ export default async function (req, res) {
           content:
             '# 提示\n你現在被用於奢華旅遊網站上的客服系統，' +
             '目的是從已經定義好的問題 json 中找出與使用者詢問的問題最接近的問題，並回傳找到的 id\n' +
-            '# 限制\n必須回覆找到的 id\n不回覆非 id 的文字與符號\n如果沒有找到問題，回覆的 id 為 -1' +
-            `# 輸入文字\n${JSON.stringify(questions)}` +
-            '# 輸出文字\n1\n2\n3...以此類推，只回覆 id' +
-            `# 修正\n${JSON.stringify(FIXFAQ)}`,
+            '# 限制\n必須回覆找到的 id\n不回覆非 id 的文字與符號\n如果沒有找到問題，回覆的 id 為 -1\n' +
+            `# 輸入文字\n${JSON.stringify(questions)}\n` +
+            '# 輸出文字\n1\n2\n3...以此類推，只回覆 id\n' +
+            `# 修正\n${JSON.stringify(FIXFAQ)}\n`,
         },
         {
           role: 'user',

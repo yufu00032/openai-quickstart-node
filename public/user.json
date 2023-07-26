@@ -1,0 +1,7 @@
+[
+  { "id": 1, "name": "Jill", "mostHotels": [2, 3, 4] },
+  { "id": 2, "name": "Ken", "mostHotels": [10, 11, 12] },
+  { "id": 3, "name": "Jacky", "mostHotels": [17, 18, 19] },
+  { "id": 4, "name": "Mina", "mostHotels": [2, 10, 17] },
+  { "id": 5, "name": "Hello World", "mostHotels": [10, 17, 19] }
+]

@@ -7,4 +7,6 @@ export const color = {
   hover: '#bbb',
   red: '#ffa39e',
   black: '#1f2022',
+  lightBlue: '#e6f4ff',
+  darkBlue: '#1677ff',
 };

@@ -9,7 +9,8 @@ const openai = new OpenAIApi(configuration);
 
 export default async function (req, res) {
   const value = req.body.value || '';
-  const NOHOTEL = '很抱歉，您諮詢的酒店不在本系統查詢的範圍內，建議您查看酒店介紹頁來了解詳細的資訊';
+  const NOHOTEL =
+    '很抱歉，您諮詢的酒店不在本系統查詢的範圍內，建議您提供更多的資訊給系統，或是查看酒店介紹頁來了解詳細的資訊';
   let trainHotel = [];
 
   if (!configuration.apiKey) {
@@ -38,13 +39,12 @@ export default async function (req, res) {
         {
           role: 'user',
           content:
-            '我會提供各種關於酒店推薦的問題，你需要找出問題中的國家、城市與特色' +
-            '特色是指酒店特色，將找到的國家、城市與特色用 { country: country, city: city, tag: tag } 回覆，只要找出一筆資料即可，' +
-            'key 使用英文，value 使用繁體中文，除此之外不要有其他文字或符號',
-        },
-        {
-          role: 'user',
-          content: value,
+            '# 提示\n你現在被用於奢華旅遊網站上的分析系統，目的是從輸入文字中找出使用者想去的國家、城市與特色，' +
+            '如果輸入文字中對某個特色是抱持負面態度，需要排除該特色' +
+            '將分析出來的資訊用 json 方式回覆，只要找出一筆資料即可\n' +
+            '# 限制\n必須用 json 回覆\n回覆的 json key 使用英文\n回覆的 json key 使用中文\n' +
+            `# 輸入文字\n${value}\n` +
+            `# 輸出文字\n{ country: 找到的國家, city: 找到的城市, tag: 找到的特色 }\n`,
         },
       ],
     });
@@ -80,22 +80,20 @@ export default async function (req, res) {
       model: 'gpt-3.5-turbo',
       temperature: 0.5,
       messages: [
-        { role: 'user', content: '我會提供一連串的酒店，你需要將其記住，直到我說"以上是全部的酒店"時停止' },
-        ...trainHotel,
         {
           role: 'user',
           content:
-            '以上是全部的酒店，接下來從我提供的問題，找出記住的酒店中最接近使用者想要尋找的酒店，最多三間' +
-            '回覆找到的酒店的 id，用"id1 id2 id3"方式回覆，除此之外不要回覆額外的文字或標點符號',
-        },
-        {
-          role: 'user',
-          content: JSON.stringify(area),
+            '# 提示\n你現在被用於奢華旅遊網站上的推薦系統，目的是在酒店列表 json 中，' +
+            '根據輸入文字中找出符合的幾間酒店，優先尋找 tag 有精選的酒店，找到的酒店盡量不連續，' +
+            '回傳找到的 id，最多為三間酒店，用 , 分隔\n' +
+            '# 限制\n必須回覆找到的 id\n除了 , 與 id 不回覆其他的文字與符號\n如果找不到任何相似的酒店，回覆的 id 為 -1\n' +
+            `# 酒店列表 json\n${JSON.stringify(findHotel)}\n` +
+            `# 輸入文字\n${value}`,
         },
       ],
     });
     let hotelId = getGPTContent(hotelCompletion);
-    hotelId = hotelId.split(' ').map((item) => parseInt(item));
+    hotelId = hotelId.split(',').map((item) => parseInt(item));
     const hotelResponse = HOTEL.filter((item) => hotelId.find((id) => item.id === id));
 
     res.status(200).json({

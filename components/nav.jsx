@@ -1,4 +1,4 @@
-import { RobotOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { RobotOutlined, AppstoreOutlined, UserAddOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import Link from 'next/link';
 
@@ -26,6 +26,13 @@ const items = [
     </Link>,
     'hotelrecommend',
     <AppstoreOutlined className="h3" />
+  ),
+  getItem(
+    <Link className="h3 hover" href="/user-recommend">
+      個人化推薦
+    </Link>,
+    'userrecommend',
+    <UserAddOutlined className="h3" />
   ),
 ];
 

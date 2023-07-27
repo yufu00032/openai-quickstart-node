@@ -34,7 +34,7 @@ yarn-error.log*
 .github/ISSUE_TEMPLATE
 
 # vscode
-/.vscode
+.vscode
 
 # github
-/.github
+.github

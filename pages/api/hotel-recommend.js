@@ -86,14 +86,43 @@ export default async function (req, res) {
             '# 提示\n你現在被用於奢華旅遊網站上的推薦系統，目的是在酒店列表 json 中，' +
             '根據輸入文字中找出符合的幾間酒店，優先尋找 tag 有精選的酒店，找到的酒店盡量不連續，' +
             '回傳找到的 id，最多為三間酒店，用 , 分隔\n' +
-            '# 限制\n必須回覆找到的 id\n除了 , 與 id 不回覆其他的文字與符號\n如果找不到任何相似的酒店，回覆的 id 為 -1\n' +
+            '# 限制\n必須回覆找到的 id\n除了 , 與 id 不回覆其他的文字與符號\n最多回覆三個 id\n' +
+            '如果輸入文字為排除國家或城市，或是對國家或城市帶有負面態度，回覆的 id 為 -2\n' +
+            '如果找不到任何相似的酒店，回覆的 id 為 -1\n' +
             `# 酒店列表 json\n${JSON.stringify(findHotel)}\n` +
-            `# 輸入文字\n${value}`,
+            `# 輸入文字\n推薦符合以下要求的酒店\n${value}`,
         },
       ],
     });
     let hotelId = getGPTContent(hotelCompletion);
     hotelId = hotelId.split(',').map((item) => parseInt(item));
+
+    if (hotelId[0] === -2) {
+      let countrys = HOTEL.map((hotel) => hotel.country);
+      countrys = [...new Set(countrys)];
+      countrys = countrys.filter((country) => country !== area.country);
+      let country = [];
+      let hotels = [];
+
+      while (true) {
+        const rand = Math.floor(Math.random() * (countrys.length - 1));
+        const randCountry = countrys[rand];
+
+        if (!country.includes(randCountry)) country.push(randCountry);
+        if (country.length === 3) break;
+      }
+
+      country.forEach((value, i) => {
+        const findHotel = HOTEL.filter((hotel) => hotel.country === value);
+        const rand = Math.floor(Math.random() * (findHotel.length - 1));
+        hotels.push(findHotel[rand]);
+      });
+
+      res.status(200).json({
+        result: hotels,
+      });
+      return;
+    }
     const hotelResponse = HOTEL.filter((item) => hotelId.find((id) => item.id === id));
 
     res.status(200).json({
